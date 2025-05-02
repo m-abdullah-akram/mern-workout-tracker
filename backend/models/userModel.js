@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const validator = require('validator');
+const bcrypt = require('bcrypt'); // npm install bcrypt
+const validator = require('validator'); // npm install validator
 
 
 const Schema = mongoose.Schema
@@ -44,5 +44,27 @@ userSchema.statics.signup = async function (email , password){
     const user = await this.create({email , password : hash});
 
     return user; // whenever we call this function it will , return us this user with email and hashed password
+}
+
+//making static signup method (you can say this as user defined)
+
+userSchema.statics.login = async function (email , password) {
+    if(!email || !password){
+        throw Error("All fields must be filled");
+    }
+
+    const userFound = await this.findOne({email}); // check if there is any email already
+
+    if(!userFound){
+        throw Error("Email not exists!");
+    }
+
+    const match = await bcrypt.compare(password , userFound.password);
+
+    if(!match){
+        throw Error("Incorrect Password!");
+    }
+
+    return userFound;
 }
 module.exports = mongoose.model("User" , userSchema);
