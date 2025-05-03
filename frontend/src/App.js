@@ -3,6 +3,10 @@ import Home from "../src/pages/Home";
 
 // importing the links
 import Navbar from '../src/components/navbar'
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+
+
 function App() {
   return (
     <div className="App">
@@ -13,6 +17,14 @@ function App() {
             <Route
               path='/' 
               element ={<Home />}
+            />
+            <Route
+              path='/login' 
+              element ={<Login />}
+            />
+            <Route
+              path='/signup' 
+              element ={<SignUp />}
             />
           </Routes>
         </div>
