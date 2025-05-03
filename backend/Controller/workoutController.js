@@ -2,7 +2,8 @@ const Workout = require('../models/workoutModels')
 const mongoose = require('mongoose');
 // get all the workouts
 const getAllWorkouts = async (req , res) => {
-    const allWorkouts = await Workout.find({}).sort({createdAt : -1}) // -1 for descending order
+    const user_id = req.user._id;
+    const allWorkouts = await Workout.find({user_id}).sort({createdAt : -1}) // -1 for descending order
     res.status(200).json(allWorkouts);
 }
 
@@ -40,7 +41,8 @@ const createWorkout = async (req , res) => {
         }
         // adding doc to the DB
         try{
-            const new_workout = await Workout.create({title , reps , load});//passing values to schema constructor
+            const user_id = req.user._id;
+            const new_workout = await Workout.create({title , reps , load , user_id});//passing values to schema constructor
             res.status(200).json(new_workout);      //status(200) to check everything is OK
         }
         catch(error){
