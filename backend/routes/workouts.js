@@ -1,11 +1,14 @@
 const express = require('express');
 const Workout = require('../models/workoutModels')
-const {getAllWorkouts , getOneWorkouts , createWorkout , deleteWorkout,updateWorkout} = require('../Controller/workoutController')
+const {getAllWorkouts , getOneWorkouts , createWorkout , deleteWorkout,updateWorkout} = require('../Controller/workoutController');
+const requireAuth = require('../middleware/requireAuths');
 
 const router = express.Router();
 
-//To GET all the workouts
+// before all other functionalities , it first run 
+router.use(requireAuth);
 
+//To GET all the workouts
 router.get('/', getAllWorkouts);
 //To GET single workouts
 router.get('/:id',getOneWorkouts)

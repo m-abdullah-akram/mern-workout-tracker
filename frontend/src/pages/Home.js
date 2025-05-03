@@ -2,7 +2,7 @@
 
 import {useEffect} from 'react'
 import { UseworkoutContext } from "../hooks/useWorkoutcontext";
-
+import { useAuthContext } from "../hooks/AuthContext"
 //importing component , the one that displays the workout details.
 import WorkoutDetails from '../components/workoutDetails'
 
@@ -10,10 +10,14 @@ import WorkForm from '../components/workoutForm'
 const Home = ()=>{
     // const [workouts , setWorkouts] = useState(null); using local , but know we will set workout as Global
     const {workouts , dispatch} =UseworkoutContext();
-
+    const { user } = useAuthContext();
     useEffect(()=>{
         const fetchWorkouts = async () => {
-            const response = await fetch("/api/workouts")
+            const response = await fetch("/api/workouts" , {
+                headers : {
+                    "Authorization":`Bearer ${user.token}`
+                }
+            })
             const json = await response.json();
 
             if(response.ok){
@@ -21,8 +25,10 @@ const Home = ()=>{
                 dispatch({type : "SET_WORKOUTS" , payload: json}); 
             }
         }
-        fetchWorkouts();
-    },[dispatch])
+        if (user) { // only fetch if user exists
+            fetchWorkouts();
+        }
+    },[dispatch,user]);
     return (
     <div className="home">
         <div className="workouts">

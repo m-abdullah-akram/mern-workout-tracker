@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useLogout } from '../hooks/useLogout'
+import { useAuthContext } from '../hooks/AuthContext';
 
 const Navbar= ()=>{
     const {logout} = useLogout();
-
+    const { user } = useAuthContext();
     const handleLogout =()=>{
         logout();
     }
@@ -14,13 +15,19 @@ const Navbar= ()=>{
                     <h1>Workout Buddy</h1>
                 </Link>
                 <nav>
-                    <div>
-                        <button onClick={handleLogout}>Log out</button>
-                    </div>
-                    <div>
-                        <Link to="/login">Login</Link>
-                        <Link to="/signup">SignUp</Link>
-                    </div>
+                    {user && ( // displays only when there is user exists    
+                        <div>
+                            <span>{user.email}</span>
+                            <button onClick={handleLogout}>Log out</button>
+                        </div>
+                    )}
+
+                    {!user && (
+                        <div>
+                            <Link to="/login">Login</Link>
+                            <Link to="/signup">SignUp</Link>
+                        </div>
+                    )}
                 </nav>
             </div>
         </header>
